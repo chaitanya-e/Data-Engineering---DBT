@@ -36,17 +36,12 @@ services:
       - source_postgres
       - destination_postgres
 
-  dbt-run:
-    image: ghcr.io/dbt-labs/dbt-postgres:1.5.8
-    command:
-      [
-        "run",
-        "--profiles-dir", 
-        "/root",
-        "--project-dir",
-        "/dbt"
-      ]
-        
+  dbt:
+    build:
+      context: ./custom_postgres
+      dockerfile: Dockerfile
+    ports:
+      - "3000:8080"
     networks:
       - elt_network
     volumes:
@@ -58,30 +53,57 @@ services:
     environment:
       DBT_PROFILE: custom_postgres
       DBT_TARGET: dev
+    
 
-  dbt-test:
-    image: ghcr.io/dbt-labs/dbt-postgres:1.5.8
-    command:
-      [
-        "test",
-        # "test --select tag:film_ratings_test_group",
-        "--profiles-dir", 
-        "/root",
-        "--project-dir",
-        "/dbt"
-      ]
+  # dbt-run:
+  #   build:
+  #     context: ./custom_postgres
+  #     dockerfile: Dockerfile
+  #   image: ghcr.io/dbt-labs/dbt-postgres:1.5.8
+  #   command:
+  #     [
+  #       "run",
+  #       "--profiles-dir", 
+  #       "/root",
+  #       "--project-dir",
+  #       "/dbt"
+  #     ]
         
-    networks:
-      - elt_network
-    volumes:
-      - ./custom_postgres:/dbt
-      - ~/.dbt:/root
-    depends_on:
-      dbt-run:
-        condition: service_completed_successfully
-    environment:
-      DBT_PROFILE: custom_postgres
-      DBT_TARGET: dev
+  #   networks:
+  #     - elt_network
+  #   volumes:
+  #     - ./custom_postgres:/dbt
+  #     - ~/.dbt:/root
+  #   depends_on:
+  #     elt_script:
+  #       condition: service_completed_successfully
+  #   environment:
+  #     DBT_PROFILE: custom_postgres
+  #     DBT_TARGET: dev
+
+  # dbt-test:
+  #   image: ghcr.io/dbt-labs/dbt-postgres:1.5.8
+  #   command:
+  #     [
+  #       "test",
+  #       # "test --select tag:film_ratings_test_group",
+  #       "--profiles-dir", 
+  #       "/root",
+  #       "--project-dir",
+  #       "/dbt"
+  #     ]
+        
+  #   networks:
+  #     - elt_network
+  #   volumes:
+  #     - ./custom_postgres:/dbt
+  #     - ~/.dbt:/root
+  #   depends_on:
+  #     dbt-run:
+  #       condition: service_completed_successfully
+  #   environment:
+  #     DBT_PROFILE: custom_postgres
+  #     DBT_TARGET: dev
 
 networks:
   elt_network:
