@@ -1,0 +1,1 @@
+{{ generate_film_ratings_with_macro() }}
