@@ -1,0 +1,53 @@
+# Use an official Python base image
+FROM python:3.9-slim
+
+# Set environment variables to prevent Python from generating .pyc files
+ENV PYTHONDONTWRITEBYTECODE 1
+# Set environment variables to prevent Python from buffering stdout and stderr
+ENV PYTHONUNBUFFERED 1
+
+# Install system dependencies (if any)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /dbt
+
+# Create 'nginx' user and group before installing Nginx
+RUN addgroup --system nginx && adduser --system --ingroup nginx nginx
+# Install nginx
+RUN apt-get update && apt-get install -y nginx
+# Install dbt and elementary
+RUN pip install dbt-core dbt-postgres elementary-data
+RUN pip install 'elementary-data[postgresql]'
+
+ENV PATH="/root/.local/bin:${PATH}"
+
+# Copy your dbt project files into the container
+COPY ./custom_postgres /dbt
+
+# Copy the Nginx configuration file into the container
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Set environment variables for dbt
+ENV DBT_PROFILE=/root/.dbt
+ENV DBT_PROJECT_DIR=/dbt
+
+# Execute dbt dependencies installation
+RUN dbt deps --profiles-dir /root/.dbt --project-dir /dbt
+
+# Copy the entrypoint script into the container and make it executable
+COPY ./custom_postgres/entrypoint-elementary.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Expose port 8080 for dbt docs serve
+EXPOSE 8080
+
+# Set the entrypoint script
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+# Default command if no other command is specified when the container is run
+CMD ["dbt", "--version"]  # This can be changed to any dbt command you commonly use

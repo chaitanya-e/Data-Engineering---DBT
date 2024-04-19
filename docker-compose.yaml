@@ -38,12 +38,10 @@ services:
 
   dbt:
     build:
-      context: ./custom_postgres
-      dockerfile: Dockerfile
+      # dockerfile: dbt-Dockerfile-simple
+      dockerfile: dbt-Dockerfile-elementary
     ports:
       - "3000:8080"
-    networks:
-      - elt_network
     volumes:
       - ./custom_postgres:/dbt
       - ~/.dbt:/root
@@ -53,6 +51,8 @@ services:
     environment:
       DBT_PROFILE: custom_postgres
       DBT_TARGET: dev
+    networks:
+      - elt_network
     
 
   # dbt-run:

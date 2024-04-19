@@ -8,7 +8,7 @@ dbt run --profiles-dir /root --project-dir /dbt
 
 # Execute dbt test
 echo    "Executing dbt test"
-dbt test --profiles-dir /root --project-dir /dbt
+dbt test --profiles-dir /root --project-dir /dbt || echo "Tests failed, but continuing to generate docs."
 
 # Generate dbt docs
 echo "Generating dbt docs..."
@@ -19,5 +19,5 @@ dbt docs generate --profiles-dir /root --project-dir /dbt
 echo "Serving dbt docs on port 8080..."
 dbt docs serve --profiles-dir /root --project-dir /dbt --port 8080
 
-# Execute any additional commands passed to the container
-exec "$@"
+# Keep the container running
+tail -f /dev/null

@@ -1,4 +1,4 @@
-default:
+postgres_transformations:
   outputs:
     dev:
       dbname: destination_db
@@ -45,3 +45,17 @@ custom_postgres:
       schema: [prod_schema]
 
   target: dev
+
+
+elementary:
+  target: elementary
+  outputs:
+    elementary:
+      type: postgres
+      host: host.docker.internal
+      user: postgres
+      password: secret
+      port: 5434
+      dbname: destination_db
+      schema: public_elementary
+      threads: 1

@@ -5,11 +5,14 @@ FROM ghcr.io/dbt-labs/dbt-postgres:1.5.8
 WORKDIR /dbt
 
 # Copy the entrypoint script into the container and make it executable
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY ./custom_postgres/entrypoint-simple.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
+# Copy the project contents
+COPY ./custom_postgres  /dbt
+
 # Expose port 8080 for dbt docs serve
-EXPOSE 8080
+EXPOSE 8080 8081
 
 # Set the entrypoint script
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

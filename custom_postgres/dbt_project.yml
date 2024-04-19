@@ -38,3 +38,8 @@ models:
 
     another example:
       +materialized: view
+
+  # elementary    
+  elementary:
+    +schema: "elementary"
+    # enabled: "{{ target.name in ['prod', 'test'] }}"
