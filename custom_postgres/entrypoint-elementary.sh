@@ -21,6 +21,7 @@ dbt docs generate --profiles-dir /root --project-dir /dbt
 # generate elementary report
 echo    "elementary edr report starts"
 edr report --project-dir /dbt --profiles-dir /root
+# edr monitor --slack-webhook https://hooks.slack.com/services/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 --project-dir /dbt --profiles-dir /root
 
 # Start dbt docs in the background on the default port (usually 8080)
 dbt docs serve --project-dir /dbt --profiles-dir /root --port 8080 &

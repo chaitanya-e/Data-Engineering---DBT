@@ -1,0 +1,5 @@
+slack:
+  notification_webhook: https://hooks.slack.com/services/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
+  group_alerts_by: <"alert">
+  # optional #
+  workflows: false
