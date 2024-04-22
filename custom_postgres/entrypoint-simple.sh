@@ -8,7 +8,12 @@ dbt run --profiles-dir /root --project-dir /dbt
 
 # Execute dbt test
 echo    "Executing dbt test"
-dbt test --profiles-dir /root --project-dir /dbt || echo "Tests failed, but continuing to generate docs."
+# dbt test --profiles-dir /root --project-dir /dbt || echo "Tests failed, but continuing to generate docs."
+dbt test --select "example" --profiles-dir /root --project-dir /dbt || echo "Tests failed, but continuing to generate docs."
+dbt test --select "example.film_ratings" --profiles-dir /root --project-dir /dbt || echo "Tests failed, but continuing to generate docs."
+dbt test --select "tag:film_ratings_test_group" --profiles-dir /root --project-dir /dbt || echo "Tests failed, but continuing to generate docs."
+dbt test --select "*,test_type:singular" --profiles-dir /root --project-dir /dbt || echo "Tests failed, but continuing to generate docs."
+dbt test --select "*,test_type:generic" --profiles-dir /root --project-dir /dbt || echo "Tests failed, but continuing to generate docs."
 
 # Generate dbt docs
 echo "Generating dbt docs..."

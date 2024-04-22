@@ -45,6 +45,7 @@ models:
 
       - name: rating_category
         description:  "Category of the rating"
+        tags: [film_ratings_test_group]
         tests:
           - accepted_values:
               values:
@@ -52,22 +53,20 @@ models:
                 - Good
                 - Average
                 - Poor
-              tags: ["film_ratings_test_group"]
-
+              
       - name: release_date
         description:  "Release date of the film."
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
               column_type:  date
           
-
       - name: user_rating
         description: "User rating of the film."
+        tags: [film_ratings_test_group]
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
               min_value: 2.0
               max_value: 5.0
           - custom_test_for_user_rating_range_check:
               max_rating: 4.5
-              min_rating: 4.2
-              tags: ["film_ratings_test_group"]
+              min_rating: 4.2       

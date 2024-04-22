@@ -64,7 +64,6 @@ services:
     command:
       [
         "test",
-        # "test --select tag:film_ratings_test_group",
         "--profiles-dir", 
         "/root",
         "--project-dir",
