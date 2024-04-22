@@ -16,10 +16,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set working directory
 WORKDIR /dbt
 
-# Create 'nginx' user and group before installing Nginx
-RUN addgroup --system nginx && adduser --system --ingroup nginx nginx
-# Install nginx
-RUN apt-get update && apt-get install -y nginx
 # Install dbt and elementary
 RUN pip install dbt-core dbt-postgres elementary-data
 RUN pip install 'elementary-data[postgresql]'
@@ -29,12 +25,12 @@ ENV PATH="/root/.local/bin:${PATH}"
 # Copy your dbt project files into the container
 COPY ./custom_postgres /dbt
 
-# Copy the Nginx configuration file into the container
-COPY nginx.conf /etc/nginx/nginx.conf
-
 # Set environment variables for dbt
 ENV DBT_PROFILE=/root/.dbt
 ENV DBT_PROJECT_DIR=/dbt
+
+# Define environment variable
+ENV INDEX_FILE /dbt/edr_target/elementary_report.html
 
 # Execute dbt dependencies installation
 RUN dbt deps --profiles-dir /root/.dbt --project-dir /dbt
@@ -44,10 +40,10 @@ COPY ./custom_postgres/entrypoint-elementary.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Expose port 8080 for dbt docs serve
-EXPOSE 8080
+EXPOSE 8080 8081
 
 # Set the entrypoint script
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Default command if no other command is specified when the container is run
-CMD ["dbt", "--version"]  # This can be changed to any dbt command you commonly use
+CMD ["dbt", "--version"]  # This can be changed to any dbt command you commonly used

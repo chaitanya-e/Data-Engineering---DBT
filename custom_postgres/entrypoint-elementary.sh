@@ -18,18 +18,13 @@ dbt test --profiles-dir /root --project-dir /dbt || echo "Tests failed, but cont
 echo "Generating dbt docs..."
 dbt docs generate --profiles-dir /root --project-dir /dbt
 
-# Serve dbt docs
-# This will start a server, it should be the last command unless you run it in the background
-# echo "Serving dbt docs on port 8080..."
-# dbt docs serve --profiles-dir /root --project-dir /dbt --port 8080
-
-# Assuming the report generates static HTML files in /dbt/target/elementary-report/
-# Serve this directory using a simple HTTP server
+# generate elementary report
 echo    "elementary edr report starts"
 edr report --project-dir /dbt --profiles-dir /root
 
 # Start dbt docs in the background on the default port (usually 8080)
 dbt docs serve --project-dir /dbt --profiles-dir /root --port 8080 &
 
-# Start nginx
-nginx -g 'daemon off;'
+# start a local server and expose the below folder to outside container on port 8081
+cd /dbt/edr_target
+python3 -m http.server 8081
