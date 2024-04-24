@@ -43,10 +43,6 @@ services:
     ports:
       - "3000:8080"
       - "3001:8081"
-    volumes:
-      - ./custom_postgres:/dbt
-      - ./dbt-profiles:/root
-      #- ~/.dbt:/root
     depends_on:
       elt_script:
         condition: service_completed_successfully

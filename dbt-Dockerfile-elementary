@@ -13,8 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
-WORKDIR /dbt
+
 
 # Install dbt and elementary
 RUN pip install dbt-core dbt-postgres elementary-data
@@ -24,13 +23,18 @@ ENV PATH="/root/.local/bin:${PATH}"
 
 # Copy your dbt project files into the container
 COPY ./custom_postgres /dbt
+COPY ./dbt-profiles /root
 
 # Set environment variables for dbt
 ENV DBT_PROFILE=/root/.dbt
 ENV DBT_PROJECT_DIR=/dbt
+ENV DBT_PROFILES_DIR /root/.dbt
 
 # Define environment variable
 ENV INDEX_FILE /dbt/edr_target/elementary_report.html
+
+# Set working directory
+WORKDIR /dbt
 
 # Execute dbt dependencies installation
 RUN dbt deps --profiles-dir /root/.dbt --project-dir /dbt
