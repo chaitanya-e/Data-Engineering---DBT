@@ -12,7 +12,7 @@ SELECT
 FROM
     User_Ratings
 WHERE
-    ratings < {{ min_rating }} and
+    ratings < {{ min_rating }} or
     ratings > {{ max_rating }}
     
 {% endtest %}

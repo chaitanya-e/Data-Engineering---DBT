@@ -59,6 +59,8 @@ models:
         tests:
           - dbt_expectations.expect_column_values_to_be_of_type:
               column_type:  date
+          - custom_test_for_year_check:
+              max_year: 2024
           
       - name: user_rating
         description: "User rating of the film."
