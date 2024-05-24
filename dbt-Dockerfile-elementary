@@ -1,5 +1,5 @@
 # Use an official Python base image
-FROM python:3.9-slim
+FROM python:latest
 
 # Set environment variables to prevent Python from generating .pyc files
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -10,6 +10,9 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     curl \
+    dos2unix \
+    libpq-dev \
+    gcc \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -41,6 +44,7 @@ RUN dbt deps --profiles-dir /root/.dbt --project-dir /dbt
 
 # Copy the entrypoint script into the container and make it executable
 COPY ./custom_postgres/entrypoint-elementary.sh /usr/local/bin/entrypoint.sh
+RUN dos2unix /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Expose port 8080 for dbt docs serve

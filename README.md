@@ -8,3 +8,4 @@ This project performs the below activities
 5. performs custom_postgres dbt tests on destination postgres
 6. generates dbt docs and serves them on port 8080
 7. uses elementary to beautify the tests and serves them on port 8081
+
